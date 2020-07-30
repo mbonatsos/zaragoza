@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>( ͡° ͜ʖ ͡°)</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.min.css" />
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"
+        integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <style>
+        html {
+            height: 100%;
+        }
+
+        body {
+            background-color: #101419;
+            /* background-image: linear-gradient(322deg, #101419, #1a60a8); */
+            height: 100%;
+        }
+
+        .card {
+            /* background-color: #101419; */
+            background-color: #222a34;
+            border-radius: 0.4em;
+        }
+
+        .tag:not(body) {
+            background-color: #1c2026;
+            color: #ffffffde;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        /* .tag.is-primary.is-hovered, */
+        .tag:not(body).is-primary {
+            background-color: #1a60a8;
+        }
+
+        .button.is-primary.is-hovered,
+        .button.is-primary:hover {
+            background-color: #1a60a8;
+
+        }
+
+        .button {
+            color: #ffffffde;
+        }
+
+        .button,
+        .button:hover,
+        .button.is-hovered,
+        .button.is-primary.is-hovered,
+        .button.is-primary:hover .button {
+            border-color: #1c2026;
+        }
+
+        .label {
+            color: #dee0e2;
+        }
+
+        #toast-container.toast-bottom-center>div {
+            width: 226px;
+        }
+
+        #toast-container>div {
+            opacity: 1;
+            box-shadow: none;
+            border-radius: 2em;
+            width: 226px;
+            margin-bottom: 40px;
+        }
+
+        .toast-success {
+            color: #fff;
+            background: #23d160;
+            border-radius: 2em;
+            font-size: 1em;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+
+        #ffff {
+            cursor: pointer !important;
+            background: #2d3745;
+            text-decoration: rgba(255, 255, 255, 0.87);
+            line-height: 14px;
+            color: white;
+            font-size: 14px;
+            border: none;
+            opacity: .54;
+            font-weight: 400;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <section class="section">
+            <div class="container">
+
+                <div class="card">
+                    <div class="card-content">
+
+                        <div class="field">
+                            <label class="label">Name</label>
+                            <div class="control">
+                                <input class="input" type="text" placeholder="ZAR-XXX" v-model="message" />
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Version</label>
+                            <div class="control">
+                                <input class="input" placeholder="1" v-model="version" type="number" min="1" step="1" />
+                            </div>
+                        </div>
+
+                        <div class="tags has-addons">
+                            <span class="tag button is-medium" v-for=" product in products"
+                                :key="`products-${product.id}`" @click="onProductClik(product)"
+                                v-bind:class="{ 'is-primary': product.isActive}">
+                                {{product.title}}</span>
+                        </div>
+
+                        <div class="field" v-if="result">
+                            <label class="label">Result</label>
+                            <div class="control">
+                                <!-- <input class="input" type="text" placeholder="Text input" v-model="zzz"> -->
+                                <textarea id="ffff" @click="onTextAreaClick" class="textarea" placeholder=""
+                                    v-model="result"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </section>
+    </div>
+
+    <script>
+        var app = new Vue({
+            el: "#app",
+            data: {
+                message: "ZAR-",
+                version: "",
+                text: "",
+                products: [
+                    { id: 0, title: "Backoffice", url: "staging-sa-backoffice-", isActive: false },
+                    { id: 1, title: "Sportsbook", url: "staging-sa-sportsbookv3-", isActive: false },
+                    { id: 2, title: "MyAccount", url: "staging-sa-myaccount-", isActive: false },
+                    { id: 3, title: "NativeApi", url: "staging-sa-native-", isActive: false },
+                    { id: 4, title: "IpsApi", url: "staging-sa-ipsapi-", isActive: false },
+                    { id: 5, title: "KycApi", url: "staging-sa-kycapi-", isActive: false },
+                    { id: 6, title: "KycConsumer", url: "staging-sa-kycconsumer-", isActive: false },
+                    { id: 7, title: "IpsJobs", url: "staging-sa-ipsjobs-", isActive: false },
+                    { id: 8, title: "Casino", url: "staging-casinov3-", isActive: false },
+                ],
+            },
+            created() {
+                this.message = localStorage.getItem('message');
+                this.version = localStorage.getItem('version');
+            },
+            methods: {
+                onProductClik(product) {
+                    product.isActive = !product.isActive;
+                },
+                onTextAreaClick(str) {
+                    let testingCodeToCopy = document.querySelector('#ffff');
+                    testingCodeToCopy.setAttribute('type', 'text');
+                    testingCodeToCopy.select();
+                    document.execCommand('copy');
+                    testingCodeToCopy.setAttribute('type', 'hidden');
+                    window.getSelection().removeAllRanges();
+
+                    toastr.options = {
+                        "closeButton": false,
+                        "debug": false,
+                        "newestOnTop": false,
+                        "progressBar": false,
+                        "positionClass": "toast-bottom-center",
+                        "preventDuplicates": true,
+                        "onclick": null,
+                        "showDuration": "300",
+                        "hideDuration": "500",
+                        "timeOut": "500",
+                        "extendedTimeOut": "1000",
+                        "showEasing": "swing",
+                        "hideEasing": "linear",
+                        "showMethod": "fadeIn",
+                        "hideMethod": "fadeOut"
+                    };
+                    toastr["success"]("Copied to clipboard!");
+                }
+            },
+            watch: {
+                message: function (val) {
+                    localStorage.setItem('message', val)
+                },
+                version: function (val) {
+                    localStorage.setItem('version', val)
+                },
+            },
+            computed: {
+                result: function () {
+                    var full = "";
+                    var versionSuffix = this.version !== "" ? `@${this.version}` : "";
+
+                    const activeProducts = this.products.filter(x => x.isActive === true);
+                    for (var i = 0; i < activeProducts.length; i++) {
+                        const product = activeProducts[i];
+                        var tag = `${product.url}${this.message}${versionSuffix}`;
+                        full += `git tag ${tag} && git push origin ${tag}`;
+
+                        if (activeProducts.length > 1 && i !== activeProducts.length - 1) {
+                            full += ` && `;
+                        }
+                    }
+
+                    return full;
+                },
+            },
+        });
+    </script>
+</body>
+
+</html>
